@@ -1,28 +1,29 @@
+
 pragma solidity ^0.5.16;
 
-contract MedicalRecords{
+contract MedicalRecords {
     struct Patient {
-               
         uint id;
         uint aadharID;
         string name;
         uint age;
         string gender;
         string medicalHistory;
-
+        string reportLocation; // new field for storing reference to medical report
     }
 
     mapping (uint => Patient) public patients;
-    uint public patientCount=0;
-     
-     constructor() public{
-         addPatient(1234, "Shahbaz", 21,  "male","Cholestrol, BP");
-          addPatient(1235, "Prachi", 21,  "female","low BP");
-           addPatient(1236, "Sumedh", 21,  "male","TB");
-     }
-    function addPatient(uint _aadharID,string memory _name, uint _age, string memory _gender, string memory _medicalHistory) public {
+    uint public patientCount;
+
+    constructor() public {
+        addPatient(1234, "Shahbaz", 21, "male", "Cholesterol, BP", "1234ab");
+        addPatient(1235, "Prachi", 21, "female", "low BP", "1235ab");
+        addPatient(1236, "Sumedh", 21, "male", "TB", "1236ab");
+    }
+
+    function addPatient(uint _aadharID, string memory _name, uint _age, string memory _gender, string memory _medicalHistory, string memory _reportLocation) public {
         patientCount++;
-        patients[patientCount] = Patient(patientCount,_aadharID, _name, _age, _gender, _medicalHistory);
+        patients[patientCount] = Patient(patientCount, _aadharID, _name, _age, _gender, _medicalHistory, _reportLocation);
     }
 
     function deletePatient(uint _id) public {
@@ -39,9 +40,9 @@ contract MedicalRecords{
         revert("Patient with given Aadhar ID not found!");
     }
 
-    function getPatient(uint _id) public view returns (uint,string memory, uint, string memory, string memory) {
+    function getPatient(uint _id) public view returns (uint, string memory, uint, string memory, string memory, string memory) {
         require(_id > 0 && _id <= patientCount, "Invalid patient ID!");
-        return ( patients[_id].aadharID,patients[_id].name, patients[_id].age, patients[_id].gender, patients[_id].medicalHistory);
+        return (patients[_id].aadharID, patients[_id].name, patients[_id].age, patients[_id].gender, patients[_id].medicalHistory, patients[_id].reportLocation);
     }
 
     function getAllPatients() public view returns (uint[] memory) {
